@@ -91,6 +91,47 @@ const transformMarketData = (apiData) => {
   return cityData;
 };
 
+const transformMarketDataWithMinimums = (apiData) => {
+  const cityData = {};
+
+  // Initialize all cities with empty data
+  Object.keys(CITY_MAPPING).forEach((displayName) => {
+    cityData[displayName] = {
+      sellOrderMin: null,
+      sellOrderMax: null,
+      buyOrderMin: null,
+      buyOrderMax: null,
+    };
+  });
+
+  // Group data by city and find minimums across all qualities
+  apiData.forEach((item) => {
+    const displayName = Object.keys(CITY_MAPPING).find(
+      (key) => CITY_MAPPING[key] === item.city,
+    );
+
+    if (displayName) {
+      const current = cityData[displayName];
+
+      // Find minimum values, excluding null/zero values
+      const updateMin = (currentValue, newValue) => {
+        if (!newValue || newValue === 0) return currentValue;
+        if (!currentValue || currentValue === 0) return newValue;
+        return Math.min(currentValue, newValue);
+      };
+
+      cityData[displayName] = {
+        sellOrderMin: updateMin(current.sellOrderMin, item.sell_price_min),
+        sellOrderMax: updateMin(current.sellOrderMax, item.sell_price_max),
+        buyOrderMin: updateMin(current.buyOrderMin, item.buy_price_min),
+        buyOrderMax: updateMin(current.buyOrderMax, item.buy_price_max),
+      };
+    }
+  });
+
+  return cityData;
+};
+
 export const formatPrice = (price) => {
   if (!price || price === 0) return "-";
   return price.toLocaleString();

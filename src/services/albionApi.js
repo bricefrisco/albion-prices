@@ -23,21 +23,36 @@ const QUALITY_MAPPING = {
 export const fetchMarketData = async (itemId, quality = "normal") => {
   try {
     const cities = Object.values(CITY_MAPPING).join(",");
-    const qualityParam = QUALITY_MAPPING[quality.toLowerCase()] || "";
+    const qualityLower = quality.toLowerCase();
 
-    let url = `${ALBION_API_BASE_URL}/stats/prices/${itemId}.json?locations=${cities}`;
-    if (qualityParam) {
-      url += `&qualities=${qualityParam}`;
+    if (qualityLower === "all") {
+      // For 'all', fetch data for all quality levels and find minimums
+      const allQualities = "1,2,3,4,5";
+      const url = `${ALBION_API_BASE_URL}/stats/prices/${itemId}.json?locations=${cities}&qualities=${allQualities}`;
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return transformMarketDataWithMinimums(data);
+    } else {
+      // For specific quality, use existing logic
+      const qualityParam = QUALITY_MAPPING[qualityLower] || "";
+      let url = `${ALBION_API_BASE_URL}/stats/prices/${itemId}.json?locations=${cities}`;
+      if (qualityParam) {
+        url += `&qualities=${qualityParam}`;
+      }
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return transformMarketData(data);
     }
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return transformMarketData(data);
   } catch (error) {
     console.error("Error fetching market data:", error);
     throw error;

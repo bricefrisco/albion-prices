@@ -18,6 +18,41 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const loadMarketData = async () => {
+      if (!item?.id) {
+        setMarketData(null);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const data = await fetchMarketData(item.id, quality);
+        setMarketData(data);
+      } catch (err) {
+        setError("Failed to fetch market data");
+        console.error("Market data fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMarketData();
+  }, [item, quality]);
+
+  const cities = [
+    "Black Market",
+    "Caerleon",
+    "Brecilien",
+    "Bridgewatch",
+    "Fort Sterling",
+    "Lymhurst",
+    "Martlock",
+    "Thetford",
+  ];
+
   return (
     <div className="sflex flex-col w-full max-w-2xl">
       <SearchForm

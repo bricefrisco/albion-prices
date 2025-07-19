@@ -65,64 +65,41 @@ const Search = () => {
       {item && (
         <div className="mt-5 w-full max-w-3xl">
           <Subheading>{item.name}</Subheading>
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {error}
+            </div>
+          )}
           <Table>
             <TableHead>
               <TableRow>
                 <TableHeader>City</TableHeader>
-                <TableHeader>Sell Order</TableHeader>
-                <TableHeader>Instant Sell</TableHeader>
-                <TableHeader>Buy Price</TableHeader>
+                <TableHeader>Sell Order Min</TableHeader>
+                <TableHeader>Sell Order Max</TableHeader>
+                <TableHeader>Buy Order Max</TableHeader>
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell className="font-bold">Black Market</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-bold">Caerleon</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-bold">Brecilien</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-bold">Bridgewatch</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-bold">Fort Sterling</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-bold">Lymhurst</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-bold">Martlock</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-bold">Thetford</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-                <TableCell>Test</TableCell>
-              </TableRow>
+              {cities.map((city) => (
+                <TableRow key={city}>
+                  <TableCell className="font-bold">{city}</TableCell>
+                  <TableCell>
+                    {loading
+                      ? "..."
+                      : formatPrice(marketData?.[city]?.sellOrderMin)}
+                  </TableCell>
+                  <TableCell>
+                    {loading
+                      ? "..."
+                      : formatPrice(marketData?.[city]?.sellOrderMax)}
+                  </TableCell>
+                  <TableCell>
+                    {loading
+                      ? "..."
+                      : formatPrice(marketData?.[city]?.buyOrderMax)}
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>

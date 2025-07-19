@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchForm from "../components/SearchForm.jsx";
 import { Subheading } from "../catalyst/heading.jsx";
 import {
@@ -9,10 +9,14 @@ import {
   TableHeader,
   TableRow,
 } from "../catalyst/table.jsx";
+import { fetchMarketData, formatPrice } from "../services/albionApi.js";
 
 const Search = () => {
   const [item, setItem] = useState(null);
   const [quality, setQuality] = useState("Normal");
+  const [marketData, setMarketData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   return (
     <div className="sflex flex-col w-full max-w-2xl">

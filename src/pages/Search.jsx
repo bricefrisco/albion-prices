@@ -74,9 +74,9 @@ const Search = () => {
             <TableHead>
               <TableRow>
                 <TableHeader>City</TableHeader>
-                <TableHeader>Sell Order Min</TableHeader>
-                <TableHeader>Sell Order Max</TableHeader>
-                <TableHeader>Buy Order Max</TableHeader>
+                <TableHeader>Sell Order</TableHeader>
+                <TableHeader>Instant Sell</TableHeader>
+                <TableHeader>Buy</TableHeader>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -91,12 +91,12 @@ const Search = () => {
                   <TableCell>
                     {loading
                       ? "..."
-                      : formatPrice(marketData?.[city]?.sellOrderMax)}
+                      : formatPrice(marketData?.[city]?.buyOrderMax)}
                   </TableCell>
                   <TableCell>
                     {loading
                       ? "..."
-                      : formatPrice(marketData?.[city]?.buyOrderMax)}
+                      : formatPrice(marketData?.[city]?.sellOrderMin)}
                   </TableCell>
                 </TableRow>
               ))}
